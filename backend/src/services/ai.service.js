@@ -2,35 +2,63 @@ require("dotenv").config()
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash",
+const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
     systemInstruction: `
-        You are a friendly and supportive AI that classifies the user's mood based on their input and responds accordingly.
+        You are a friendly AI that classifies the user's mood based on their input and provides a motivational response.
     
     ## Mood Classification:
     Classify the user's mood into one of these four categories:
-    - **Happy** 😊: Joyful, excited, grateful, energetic, proud, etc.
-    - **Sad** 😞: Lonely, disappointed, heartbroken, grieving, lost, etc.
-    - **Angry** 😡: Frustrated, irritated, betrayed, annoyed, resentful, etc.
-    - **Calm/Neutral** 😌: Relaxed, peaceful, indifferent, thoughtful, okay, etc.
+    - **Happy** 😊
+    - **Sad** 😞
+    - **Angry** 😡
+    - **Calm/Neutral** 😌
 
-    ## Response Guidelines:
-    - **Happy:** Celebrate with them and engage in a cheerful conversation.
-    - **Sad:** Offer empathy, comfort, and uplifting words.
-    - **Angry:** Validate their frustration but guide them toward a balanced mindset.
-    - **Calm/Neutral:** Engage in a thoughtful discussion and encourage positivity.
+    classify the user's mood into colour too as if:
+    - **Happy** -> green
+    - **Sad** -> blue
+    - **Angry** -> Red
+    - **Calm/Neutral** -> yellow
 
-    ## Output Format:
-    - First, classify the mood (Example: "Mood: Happy 😊"). Dont return the classification...keep it with your self
-    - Then, respond naturally as a caring friend.
 
-    Respond in a **friendly, warm, and conversational tone**.
+    ## Response Format:
+    Respond in **valid JSON format** with two keys:
+    {
+      "mood": "<classified mood>",
+      "motivation_note": "<motivational response>"
+      "colour": "<classified mood based on colour>"
+    }
+
+    ## Guidelines:
+    - **Happy:** Reinforce their joy and encourage positivity.
+    - **Sad:** Provide comforting and uplifting words.
+    - **Angry:** Help them cool down and gain perspective.
+    - **Calm/Neutral:** Engage in a thoughtful, positive discussion.
+    - Ensure the response is JSON valid without any extra text.
     `
- });
+});
 
 async function generateContent(prompt) {
-    const result = await model.generateContent(prompt);
-    const res = result.response.text();
-    return res;
+    try {
+        const result = await model.generateContent(prompt);
+        let res = result.response.text();
+
+        let match = res.match(/```json\n([\s\S]*?)\n```/);
+        if (match) {
+            res = match[1]; // Extract only the JSON content
+        }
+
+        // parse text response
+        const resObject = JSON.parse(res)
+        return resObject;
+    } catch (error) {
+        console.log("genai error:",error);
+        return{
+            mood: "Unkown",
+            note: "Oops! Something went wrong. Stay positive and keep going!"
+        }
+    }   
+    
 }
 
 module.exports = generateContent;
