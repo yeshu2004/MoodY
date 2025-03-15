@@ -11,4 +11,7 @@ app.get('/',(req,res)=>{
 
 app.use('/ai',aiRoute)
 
+app.get('/register',)
+
+
 module.exports = app

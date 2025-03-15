@@ -4,7 +4,7 @@ const generateContent = require('../services/ai.service');
 const Mood = require('../schema/mood.schema');
 
 router.get('/mood-review',async (req,res)=>{
-    try {
+    try {x
         //fetch mood
         const { mood } = req.query; //req.body
 
