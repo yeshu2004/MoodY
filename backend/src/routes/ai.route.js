@@ -2,11 +2,12 @@ const express = require('express')
 const router = express.Router()
 const generateContent = require('../services/ai.service');
 const Mood = require('../schema/mood.schema');
-const isLoggedIn = require('./user.register');
+const isLoggedIn = require('../middlewares/auth.middleware');
 const User = require('../schema/user.schema');
 
 router.post('/mood-review',isLoggedIn,async (req,res)=>{
     try {
+        console.log(req.user);
         let user = await User.findOne({email: req.user.email})
         if (!user) {
             return res.status(404).json({ error: "User not found" });
@@ -31,7 +32,11 @@ router.post('/mood-review',isLoggedIn,async (req,res)=>{
         })
 
         await newMood.save();
-        console.log(moodResponse)
+
+        user.mood.push(newMood._id);
+        await user.save(); 
+
+        console.log(newMood)
         res.send(moodResponse)
 
     } catch (error) {

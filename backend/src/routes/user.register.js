@@ -43,19 +43,5 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// MIDDLEWARE: Check if user is logged in
-function isLoggedIn(req, res, next) {
-    try {
-        const token = req.cookies?.token;
-        if (!token) return res.status(401).json({ message: "You must be logged in" });
 
-        const data = jwt.verify(token, process.env.JWT_SECRET || 'shhhhh');
-        req.user = data;
-        next();
-    } catch (error) {
-        return res.status(401).json({ message: "Invalid Token", error: error.message });
-    }
-}
-
-module.exports = isLoggedIn;
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express')
 const aiRoute = require('./routes/ai.route');
 const registerRoute = require('./routes/user.register')
 const loginRoute = require('./routes/user.login')
+const moodHistory = require('./routes/graph.mood')
 
 const dbConnection = require('./db/db');
 const cookieParser = require('cookie-parser')
@@ -19,6 +20,8 @@ app.get('/',(req,res)=>{
 app.use('/ai',aiRoute)
 app.use('/auth',registerRoute)
 app.use('/auth',loginRoute)
+app.use('/graph',moodHistory)
+
 
 
 
