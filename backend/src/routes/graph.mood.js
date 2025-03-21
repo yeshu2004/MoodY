@@ -11,6 +11,7 @@ router.get('/mood', isLoggedIn ,async (req,res)=>{
             return res.status(404).json({ error: "No mood history found" });
         }
 
+        // for graph plotting
         const moodHistory = user.mood.map((mood) => ({
             id: mood._id,
             moodType: mood.moodType,

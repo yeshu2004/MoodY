@@ -12,13 +12,13 @@ const model = genAI.getGenerativeModel({
     - **Happy** 😊
     - **Sad** 😞
     - **Angry** 😡
-    - **Calm/Neutral** 😌
+    - **Neutral** 😌
 
     classify the user's mood into colour too as if:
     - **Happy** -> green
     - **Sad** -> blue
     - **Angry** -> Red
-    - **Calm/Neutral** -> yellow
+    - **Neutral** -> yellow
 
 
     ## Response Format:
@@ -33,7 +33,7 @@ const model = genAI.getGenerativeModel({
     - **Happy:** Reinforce their joy and encourage positivity.
     - **Sad:** Provide comforting and uplifting words.
     - **Angry:** Help them cool down and gain perspective.
-    - **Calm/Neutral:** Engage in a thoughtful, positive discussion.
+    - **Neutral:** Engage in a thoughtful, positive discussion.
     - Ensure the response is JSON valid without any extra text.
     `
 });
